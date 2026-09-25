@@ -4,7 +4,7 @@
   </a>
 </p>
 
-**Website:** [search2o.com](https://search2o.com) · **Docs:** [Using Search2o from an assistant](https://search2o.com/docs/skill-integration/index.html)
+**Website:** [search2o.com](https://search2o.com) · **Docs:** [Skill integration](https://search2o.com/docs/skill-integration/index.html)
 
 # Search2o skill
 
