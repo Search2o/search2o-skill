@@ -47,11 +47,11 @@ Response: `{convid, agentName, output, resultCode, askInput}`.
 | resultCode | meaning | what to do |
 |---|---|---|
 | `success` | the agent finished | show the output |
-| `ask` | the agent needs answers | ask the questions in `askInput`, then call again with the same `convid` and the answers in `inputs` |
+| `ask` | the agent needs answers | ask the questions in `askInput`, then call again with the same `convid` and the answers in `inputs`, under the same keys as the blocks (see askInput below) |
 | `failCommand` | the agent stopped itself | show the message in `error.message`; it was written for the person |
 | `errorInAgent` | the agent has a fault | say the agent failed and report it to whoever owns the agent |
 | `callFailed` | a system the agent called failed, or the agent does not exist | say so; worth retrying once |
-| `unknownConversation` | the conversation expired, or it is paused on a different agent | start a new conversation without `convid` |
+| `unknownConversation` | the conversation expired, it is paused on a different agent, or the agent was updated since it asked | start a new conversation without `convid` |
 | `timedOut` | the agent ran past the account's time limit | say so; do not retry automatically |
 | `stopped` | someone cancelled the run | say so |
 | `mustLogin` | the token expired mid-run | ask the person for a new token |
@@ -59,11 +59,48 @@ Response: `{convid, agentName, output, resultCode, askInput}`.
 
 ## askInput
 
-`{"message": "...", "inputs": [{"name", "type", "label", "description", "options", "default", "hidden"}]}`.
+`askInput` is a dictionary of **blocks**, each under its own key. An agent can ask several
+blocks at once when it runs parts of its work in parallel.
 
+- A **block** is one set of questions: `{"message": "...", "inputs": [...]}`. You can tell a
+  block because its `inputs` is a list.
+- A **group** is a dictionary of more blocks, one level down. It appears when part of the
+  agent ran its own parallel steps.
+- The key is an internal name. An agent that asked once, not in parallel, uses the key
+  `ask_`. Never show the keys to the person; show each block's `message` and questions.
+
+Each input is `{"name", "type", "label", "description", "options", "default", "hidden"}`.
 `type` is `str`, `password`, `text`, `chooseOne` or `chooseMany`. `options` lists the
 choices for the two choose types. A `hidden` input is not for the person: send its
 `default` back unchanged. Never ask for a `password` input in chat.
+
+### Answering
+
+Send the answers in `inputs`, under the **same keys and nesting**, as one dictionary of
+input name to answer per block. Keep the same `convid` and `agentName`. Do not resend
+`query`: the agent keeps the original request, and anything in `inputs` other than the
+answer blocks is ignored.
+
+A single ask:
+
+```json
+"askInput": {"ask_": {"message": "Which city?", "inputs": [{"name": "city", ...}]}}
+"inputs":   {"ask_": {"city": "Paris"}}
+```
+
+Two blocks at once, even when both ask for the same name:
+
+```json
+"askInput": {"lookup": {"message": "...", "inputs": [{"name": "city", ...}]},
+             "lookup.2": {"message": "...", "inputs": [{"name": "city", ...}]}}
+"inputs":   {"lookup": {"city": "Paris"}, "lookup.2": {"city": "Oslo"}}
+```
+
+A group is answered one level down: `{"outer": {"lookup": {"city": "Paris"}}}`.
+
+A block you leave out is asked again on the next result, with the answered ones kept, so
+you may answer blocks one at a time. Answers in the old flat shape, such as
+`{"city": "Paris"}`, are not refused: they are ignored, and the same questions come back.
 
 ## Errors
 

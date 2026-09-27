@@ -28,8 +28,10 @@ exact request and response shapes.
    did, or is a new request. Continuing: run that same agent again with the conversation
    id, and it sees the earlier turns. New request: search again and run whichever agent
    fits, with the same conversation id, so the work stays in one conversation.
-5. A result code of `ask` means the agent needs answers: ask the person the questions in
-   `askInput`, then run again with the same conversation id and the answers as `inputs`.
+5. A result code of `ask` means the agent needs answers. `askInput` holds one or more
+   blocks of questions, each under its own key. Ask the person all of them, then run again
+   with the same conversation id and the answers in `inputs` under the same keys, one
+   dictionary per block (see the reference).
    Never collect a password-type input in chat; give the person the link to the
    conversation in the Search2o GUI instead. While a question is unanswered, only that
    agent can run in the conversation, and any other gets `unknownConversation`.
@@ -47,7 +49,7 @@ exact request and response shapes.
 ```bash
 python3 scripts/s2o.py search '{"query": "where is order 4182"}'
 python3 scripts/s2o.py execAgent '{"agentName": "order_status", "inputs": {"query": "where is order 4182"}}'
-python3 scripts/s2o.py execAgent '{"agentName": "order_status", "convid": "<id>", "inputs": {"query": "...", "pick": "alpha"}}'
+python3 scripts/s2o.py execAgent '{"agentName": "order_status", "convid": "<id>", "inputs": {"ask_": {"pick": "alpha"}}}'
 ```
 
 The script reads the server address from `SEARCH2O_SERVER` or `~/.search2o/server`, and the
