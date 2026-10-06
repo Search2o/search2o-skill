@@ -18,10 +18,10 @@ exact request and response shapes.
 1. Send the request to `search` as the person wrote it. Search2o refuses a query shorter
    than eight characters, so treat anything that short, such as "hi" or "thanks", as
    conversation rather than a request.
-2. The matches come back best first, each with an `agentName` and an `agentTitle`. Judge
-   from the titles which one fits the request and run it. Ask the person only when two
-   titles fit equally well and the choice changes what happens. No matches means no
-   internal agent covers this: say so, then answer normally.
+2. At most two matches come back, best first, each with an `agentName` and an
+   `agentTitle`. Judge from the titles which one fits the request and run it. Ask the
+   person only when both titles fit equally well and the choice changes what happens. No
+   matches means no internal agent covers this: say so, then answer normally.
 3. Run with `execAgent`. Pass the conversation id from earlier in this chat if there is
    one. Remember the id that comes back and which agent ran, for the rest of the chat.
 4. On a later request, decide for yourself whether it continues the work the last agent

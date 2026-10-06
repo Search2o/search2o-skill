@@ -11,7 +11,7 @@ Response:
 
 | field | meaning |
 |---|---|
-| `searchResults` | the matching agents, best first, each `{agentName, agentTitle}` |
+| `searchResults` | the matching agents, at most two, best first, each `{agentName, agentTitle}` |
 
 There are no descriptions in a result. Choose on `agentTitle`.
 
