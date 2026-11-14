@@ -1,0 +1,15 @@
+{
+  "name": "search2o",
+  "description": "The Search2o plugin for Claude Code: find and run your Search2o agents.",
+  "owner": {
+    "name": "Search2o",
+    "url": "https://search2o.com"
+  },
+  "plugins": [
+    {
+      "name": "search2o",
+      "source": "./",
+      "description": "Find and run your Search2o agents from Claude Code."
+    }
+  ]
+}

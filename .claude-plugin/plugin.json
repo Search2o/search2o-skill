@@ -1,0 +1,16 @@
+{
+  "name": "search2o",
+  "version": "1.0.0",
+  "description": "Find and run your Search2o agents: search for the agent that fits a request, run it, answer its questions and show the result.",
+  "author": {
+    "name": "Search2o",
+    "url": "https://search2o.com"
+  },
+  "homepage": "https://search2o.com/docs/skill-integration/index.html",
+  "repository": "https://github.com/Search2o/search2o-skill",
+  "keywords": [
+    "search2o",
+    "agents",
+    "internal-tools"
+  ]
+}

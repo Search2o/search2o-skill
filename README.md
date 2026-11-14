@@ -13,8 +13,8 @@ company's Search2o agents. The assistant searches for the agent that fits what t
 asked, runs it, asks the person any questions the agent needs answered, and shows the
 result.
 
-The same folder works in every client that implements the Agent Skills standard, among them
-Claude Code, Cursor and OpenAI Codex.
+The `skills/search2o` folder works in every client that implements the Agent Skills standard, among them
+Claude Code, Cursor and OpenAI Codex. For Claude Code the repository is also a plugin.
 
 ## What you need
 
@@ -26,10 +26,24 @@ Claude Code, Cursor and OpenAI Codex.
 
 ## Install
 
-Copy the `search2o` folder into the client's skills directory. For Claude Code:
+In Claude Code, install it as a plugin:
+
+```
+/plugin install search2o --marketplace Search2o/search2o-skill
+```
+
+In any other client, install the skill with npx, which copies it into the skills directory
+of the client you pick:
 
 ```bash
-cp -R search2o ~/.claude/skills/
+npx skills add https://github.com/Search2o/search2o-skill --skill search2o
+```
+
+Or copy the `skills/search2o` folder into the client's skills directory yourself. The same
+copy works for Claude Code if you would rather not use the plugin:
+
+```bash
+cp -R skills/search2o ~/.claude/skills/
 ```
 
 Then give the script the server address and the token, either as environment variables:
@@ -52,13 +66,16 @@ chmod 600 ~/.search2o/token
 The token is never stored in the skill's files. Revoke it from the GUI when it is no longer
 needed, and revoke any token that has been pasted into a chat.
 
-## What is in the folder
+## What is in the repository
 
 ```
-search2o/
-  SKILL.md          the instructions, and the description that triggers the skill
-  reference.md      request and response shapes, result codes, output types
-  scripts/s2o.py    the two calls, search and execAgent
+.claude-plugin/
+  plugin.json         the Claude Code plugin manifest
+  marketplace.json    lets Claude Code install the plugin straight from this repository
+skills/search2o/
+  SKILL.md            the instructions, and the description that triggers the skill
+  reference.md        request and response shapes, result codes, output types
+  scripts/s2o.py      the two calls, search and execAgent
 ```
 
 `SKILL.md`'s description decides when the assistant reaches for the skill. Edit its examples
@@ -68,8 +85,8 @@ and stays out of the way otherwise.
 ## Trying it
 
 ```bash
-python3 search2o/scripts/s2o.py search '{"query": "where is order 4182"}'
-python3 search2o/scripts/s2o.py execAgent '{"agentName": "order_status", "inputs": {"query": "where is order 4182"}}'
+python3 skills/search2o/scripts/s2o.py search '{"query": "where is order 4182"}'
+python3 skills/search2o/scripts/s2o.py execAgent '{"agentName": "order_status", "inputs": {"query": "where is order 4182"}}'
 ```
 
 Each call prints one JSON object. A failed call prints a message and exits non-zero.
